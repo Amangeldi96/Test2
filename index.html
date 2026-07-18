@@ -24,10 +24,9 @@
             max-width: 400px;
             display: flex;
             flex-direction: column;
-            position: relative;
         }
         
-        /* Экрандарды башкаруу */
+        /* Экрандарды алмаштыруу */
         .screen {
             display: none;
         }
@@ -36,7 +35,6 @@
             flex-direction: column;
         }
 
-        /* Артка кайтуу баскычы */
         .back-btn {
             background: none;
             border: none;
@@ -60,7 +58,7 @@
             margin-bottom: 32px;
         }
         
-        /* Инпуттардын стили */
+        /* Инпуттар */
         .input-group {
             margin-bottom: 20px;
         }
@@ -81,13 +79,11 @@
             font-size: 17px;
             color: #111;
             outline: none;
-            transition: border-color 0.2s;
         }
         .input-field:focus {
             border-color: #222;
         }
 
-        /* Текст оферты */
         .agreement {
             font-size: 13px;
             color: #666;
@@ -99,7 +95,7 @@
             text-decoration: none;
         }
 
-        /* Негизги баскыч */
+        /* Кнопкалар */
         .primary-btn {
             width: 100%;
             height: 54px;
@@ -118,7 +114,6 @@
             color: #fff;
         }
 
-        /* Төмөнкү шилтеме */
         .footer-text {
             text-align: center;
             margin-top: 60px;
@@ -131,7 +126,7 @@
             font-weight: 500;
         }
 
-        /* Код киргизүүчү инпуттар */
+        /* СМС коддун инпуттары */
         .code-inputs {
             display: flex;
             justify-content: space-between;
@@ -162,7 +157,7 @@
 
 <div class="container">
 
-    <!-- ЭКРАН 1: ТЕЛЕФОН НОМЕР ЖАЗУУ -->
+    <!-- 1-ЭКРАН: ТЕЛЕФОН НОМЕР -->
     <div id="phone-screen" class="screen active">
         <h1>Регистрация</h1>
         <p class="subtitle">Укажите номер телефона, чтобы получить код подтверждения</p>
@@ -176,15 +171,15 @@
             Нажимая кнопку, вы подтверждаете согласие с <a href="#">Условиями и Политикой конфиденциальности</a>
         </p>
 
+        <!-- reCAPTCHA байлана турган негизги баскыч -->
         <button id="send-code-btn" class="primary-btn" disabled>Продолжить</button>
 
         <p class="footer-text">Есть аккаунт? <a href="#">Войти</a></p>
     </div>
 
-    <!-- ЭКРАН 2: КОДДУ ТЕКШЕРҮҮ -->
+    <!-- 2-ЭКРАН: КОДДУ КИРГИЗҮҮ -->
     <div id="code-screen" class="screen">
         <button id="back-to-phone" class="back-btn">
-            <!-- Артка кайтуу жебеси (SVG) -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4cd9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </button>
         
@@ -192,12 +187,12 @@
         <p class="subtitle">Мы отправили код подтверждения на номер <span id="display-phone" style="font-weight: 600;"></span></p>
 
         <div class="code-inputs">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
         </div>
 
         <p class="timer-text">Отправить код повторно через: <span id="timer">0:58</span></p>
@@ -205,15 +200,15 @@
 
 </div>
 
-<!-- ИНВИЗИБЛ КАПЧА ҮЧҮН КОНТЕЙНЕР -->
+<!-- Жашыруун капча үчүн контейнер (бул сөзсүз керек) -->
 <div id="recaptcha-container"></div>
 
-<!-- FIREBASE SDK ИНТЕГРАЦИЯСЫ -->
+<!-- СИЗ ЖӨНӨТКӨН ЖАНА ДОКУМЕНТТЕГИ ДЕҢГЕЙДЕГИ FIREBASE SDK V10+ -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // Сиздин Firebase Ачкычтар
+    // Сиздин Firebase ачкычтар
     const firebaseConfig = {
         apiKey: "AIzaSyAtmgZv5gq-goS6slRwZ85_nEm4WA3-Wsg",
         authDomain: "test-321e8.firebaseapp.com",
@@ -224,14 +219,13 @@
         measurementId: "G-17FPPQ9630"
     };
 
-    // Firebase'ди ишке киргизүү
+    // Инициализация
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    auth.languageCode = 'ru'; // СМС тилин орусча кылуу
+    auth.languageCode = 'ru'; // СМС билдирүүнүн тили
 
     let confirmationResult = null;
 
-    // Элементтерди алуу
     const phoneInput = document.getElementById('phone-input');
     const sendCodeBtn = document.getElementById('send-code-btn');
     const phoneScreen = document.getElementById('phone-screen');
@@ -240,9 +234,9 @@
     const backToPhone = document.getElementById('back-to-phone');
     const codeInputs = document.querySelectorAll('.code-input');
 
-    // Телефон номери жазылганда баскычты активдештирүү
+    // Номер терилгенде баскычты жандыруу
     phoneInput.addEventListener('input', () => {
-        if (phoneInput.value.trim().length > 9) {
+        if (phoneInput.value.trim().length >= 12) { // +996 жана 9 цифра
             sendCodeBtn.removeAttribute('disabled');
             sendCodeBtn.classList.add('enabled');
         } else {
@@ -251,15 +245,15 @@
         }
     });
 
-    // Invisible Recaptcha жөндөөсү
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+    // 1-документте көрсөтүлгөндөй Invisible reCAPTCHA жөндөөсү
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'send-code-btn', {
         'size': 'invisible',
         'callback': (response) => {
-            // reCAPTCHA solved
+            // Капча ийгиликтүү текшерилгенде иштейт
         }
     });
 
-    // СМС Код жөнөтүү (Продолжить баскычы басылганда)
+    // СМС жөнөтүү логикасы (3-документке ылайык)
     sendCodeBtn.addEventListener('click', () => {
         const phoneNumber = phoneInput.value.trim();
         const appVerifier = window.recaptchaVerifier;
@@ -271,36 +265,39 @@
             .then((result) => {
                 confirmationResult = result;
                 
-                // Экрандарды алмаштыруу
+                // Экранды алмаштыруу
                 displayPhone.innerText = phoneNumber;
                 phoneScreen.classList.remove('active');
                 codeScreen.classList.add('active');
                 
-                startTimer(); // Таймерди иштетүү
-                codeInputs[0].focus(); // Биринчи инпутка фокус берүү
+                startTimer();
+                codeInputs[0].focus();
             })
             .catch((error) => {
-                alert("Ката кетти: " + error.message);
+                alert("Ката келип чыкты: " + error.message);
                 sendCodeBtn.innerText = "Продолжить";
                 sendCodeBtn.removeAttribute('disabled');
+                // Эгер капча блоктолуп калса, аны кайра жаңылоо (3-документтеги reset логикасы)
+                if (window.grecaptcha) {
+                    window.grecaptcha.reset();
+                }
             });
     });
 
-    // Код киргизүүчү инпуттардын логикасы (бирөөсүнө жазганда кийинкисине өтүү)
+    // Кодду бирден терүү логикасы
     codeInputs.forEach((input, index) => {
         input.addEventListener('input', (e) => {
             if (e.target.value.length === 1 && index < codeInputs.length - 1) {
                 codeInputs[index + 1].focus();
             }
             
-            // Эгер бардык 6 цифра терилсе, кодду текшерүү
+            // 6 цифра тең толгондо автоматтык түрдө текшерүү (4-документке ылайык)
             const fullCode = Array.from(codeInputs).map(i => i.value).join('');
             if (fullCode.length === 6) {
                 verifyCode(fullCode);
             }
         });
 
-        // Backspace басканда артка кайтуу
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Backspace' && !e.target.value && index > 0) {
                 codeInputs[index - 1].focus();
@@ -308,15 +305,22 @@
         });
     });
 
-    // Кодду текшерүү функциясы
+    // Киргизилген СМС кодду Firebase аркылуу ырастоо (4-документтеги confirm логикасы)
     function verifyCode(code) {
-        confirmationResult.confirm(code).then((result) => {
-            const user = result.user;
-            alert("Ийгиликтүү катталдыңыз! UID: " + user.uid);
-            // Бул жерге катталгандан кийин өтө турган баракчанын кодун жазсаңыз болот
-        }).catch((error) => {
-            alert("Ката код киргизилди же мөөнөтү бүткөн!");
-        });
+        if (!confirmationResult) return;
+
+        confirmationResult.confirm(code)
+            .then((result) => {
+                const user = result.user;
+                alert("Ийгиликтүү кирдиңиз! Колдонуучунун UID: " + user.uid);
+                // Ушул жерге ийгиликтүү киргенден кийин ачыла турган баракчага багыттама берсеңиз болот
+            })
+            .catch((error) => {
+                alert("Ката код киргизилди же мөөнөтү бүтүп калган!");
+                // Ката болгондо код жазган жерлерди тазалоо
+                codeInputs.forEach(input => input.value = '');
+                codeInputs[0].focus();
+            });
     }
 
     // Артка кайтуу баскычы
@@ -327,14 +331,15 @@
         sendCodeBtn.removeAttribute('disabled');
     });
 
-    // Жөнөкөй таймер функциясы
+    // Таймердин иштеши
     function startTimer() {
         let timeLeft = 58;
         const timerElement = document.getElementById('timer');
         const interval = setInterval(() => {
             if (timeLeft <= 0) {
                 clearInterval(interval);
-                timerElement.innerText = "Отправить кайрадан";
+                timerElement.innerText = "Отправить повторно";
+                timerElement.style.color = "#4cd9c0";
                 timerElement.style.cursor = "pointer";
             } else {
                 let seconds = timeLeft % 60;
@@ -347,4 +352,4 @@
 </script>
 
 </body>
-</html>
+            </html>
