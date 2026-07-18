@@ -5,26 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
     <style>
-        * { box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0; }
-        body { background-color: #ffffff; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 40px 24px; }
-        .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; }
-        .screen { display: none; }
-        .screen.active { display: flex; flex-direction: column; }
-        .back-btn { background: none; border: none; cursor: pointer; width: 24px; height: 24px; margin-bottom: 24px; padding: 0; }
-        h1 { font-size: 32px; font-weight: 700; color: #111; margin-bottom: 12px; }
-        .subtitle { font-size: 15px; color: #666; margin-bottom: 32px; }
-        .input-group { margin-bottom: 20px; }
-        .input-label { font-size: 14px; color: #333; margin-bottom: 8px; }
-        .input-field { width: 100%; height: 54px; border: 1px solid #d9d9d9; border-radius: 12px; padding: 0 16px; font-size: 17px; outline: none; }
-        .primary-btn { width: 100%; height: 54px; background-color: #f5f5f5; border: 1px solid #e8e8e8; border-radius: 12px; color: #b5b5b5; font-size: 16px; font-weight: 600; cursor: pointer; }
-        .primary-btn.enabled { background-color: #111; color: #fff; }
-        .code-inputs { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 24px; }
-        .code-input { width: 48px; height: 48px; border: 1px solid #d9d9d9; border-radius: 8px; text-align: center; font-size: 18px; outline: none; }
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            margin-bottom: 24px;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 32px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .input-field {
+            width: 100%;
+            height: 54px;
+            border: 1px solid #d9d9d9;
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 17px;
+            color: #111;
+            outline: none;
+        }
+        .input-field:focus {
+            border-color: #222;
+        }
+
+        .primary-btn {
+            width: 100%;
+            height: 54px;
+            background-color: #f5f5f5;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            color: #b5b5b5;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .primary-btn.enabled {
+            background-color: #111;
+            border-color: #111;
+            color: #fff;
+        }
+
+        .code-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .code-input {
+            width: 48px;
+            height: 48px;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            outline: none;
+        }
+        .code-input:focus {
+            border-color: #222;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- 1-ЭКРАН -->
     <div id="phone-screen" class="screen active">
         <h1>Регистрация</h1>
         <p class="subtitle">Укажите номер телефона</p>
@@ -35,21 +132,21 @@
         <button id="send-code-btn" class="primary-btn" disabled>Продолжить</button>
     </div>
 
+    <!-- 2-ЭКРАН -->
     <div id="code-screen" class="screen">
         <button id="back-to-phone" class="back-btn">←</button>
         <h1>Введите код</h1>
         <div class="code-inputs">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
-            <input type="text" maxlength="1" class="code-input">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
         </div>
     </div>
 </div>
 
-<!-- Капча контейнери -->
 <div id="recaptcha-container"></div>
 
 <script type="module">
@@ -69,7 +166,6 @@
     const auth = getAuth(initializeApp(firebaseConfig));
     auth.languageCode = 'ru';
 
-    // ОҢДОЛГОН ЖЕР: document.getElementById колдонулду
     window.recaptchaVerifier = new RecaptchaVerifier(auth, document.getElementById('recaptcha-container'), {
         'size': 'invisible'
     });
@@ -77,15 +173,28 @@
     const phoneInput = document.getElementById('phone-input');
     const sendCodeBtn = document.getElementById('send-code-btn');
 
-    phoneInput.addEventListener('input', () => {
-        if (phoneInput.value.trim().length >= 12) {
+    // Баскычты күйгүзүүчү функция
+    function checkPhone() {
+        const num = phoneInput.value.trim();
+        if (num.length >= 13) { // +996 жана 9 цифра (жалпы 13 символ)
             sendCodeBtn.disabled = false;
             sendCodeBtn.classList.add('enabled');
+        } else {
+            sendCodeBtn.disabled = true;
+            sendCodeBtn.classList.remove('enabled');
         }
-    });
+    }
+
+    // Текст жазганда да, барак жаңыланганда да иштесин
+    phoneInput.addEventListener('input', checkPhone);
+    window.addEventListener('load', checkPhone);
+    checkPhone(); // Түз эле чакыруу
 
     sendCodeBtn.addEventListener('click', () => {
         sendCodeBtn.innerText = "Отправка...";
+        sendCodeBtn.disabled = true;
+        sendCodeBtn.classList.remove('enabled');
+
         signInWithPhoneNumber(auth, phoneInput.value.trim(), window.recaptchaVerifier)
             .then((result) => {
                 window.confirmationResult = result;
@@ -95,19 +204,19 @@
             .catch((err) => {
                 alert("Ошибка: " + err.message);
                 sendCodeBtn.innerText = "Продолжить";
+                checkPhone();
                 if(window.grecaptcha) window.grecaptcha.reset();
             });
     });
 
-    // Кодду текшерүү
     document.querySelectorAll('.code-input').forEach((input, index, inputs) => {
         input.addEventListener('input', (e) => {
             if(e.target.value.length === 1 && index < 5) inputs[index+1].focus();
             const code = Array.from(inputs).map(i => i.value).join('');
             if(code.length === 6) {
                 window.confirmationResult.confirm(code)
-                    .then(() => alert("Успешно!"))
-                    .catch(() => alert("Неверный код"));
+                    .then(() => alert("Успешно кирдиңиз!"))
+                    .catch(() => alert("Код туура эмес!"));
             }
         });
     });
