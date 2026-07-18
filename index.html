@@ -25,7 +25,6 @@
             display: flex;
             flex-direction: column;
         }
-        
         .screen {
             display: none;
         }
@@ -33,7 +32,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .back-btn {
             background: none;
             border: none;
@@ -44,7 +42,6 @@
             padding: 0;
             font-size: 20px;
         }
-
         h1 {
             font-size: 28px;
             font-weight: 700;
@@ -57,7 +54,6 @@
             line-height: 1.4;
             margin-bottom: 24px;
         }
-        
         .input-group {
             margin-bottom: 16px;
         }
@@ -76,14 +72,10 @@
             color: #111;
             outline: none;
         }
-        .input-field:focus {
-            border-color: #222;
-        }
-
         .primary-btn {
             width: 100%;
             height: 50px;
-            background-color: #111; /* Дароо кара түстө болот */
+            background-color: #111;
             border: 1px solid #111;
             border-radius: 12px;
             color: #fff;
@@ -98,7 +90,6 @@
             color: #b5b5b5;
             cursor: not-allowed;
         }
-
         .code-inputs {
             display: flex;
             justify-content: space-between;
@@ -115,15 +106,12 @@
             font-weight: 600;
             outline: none;
         }
-        .code-input:focus {
-            border-color: #222;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- 1-ЭКРАН -->
+    <!-- 1-ЭКРАН: ТЕЛЕФОН НОМЕР -->
     <div id="phone-screen" class="screen active">
         <h1>Регистрация</h1>
         <p class="subtitle">Укажите номер телефона</p>
@@ -134,7 +122,7 @@
         <button id="send-code-btn" class="primary-btn">Продолжить</button>
     </div>
 
-    <!-- 2-ЭКРАН -->
+    <!-- 2-ЭКРАН: КОДДУ КИРГИЗҮҮ -->
     <div id="code-screen" class="screen">
         <button id="back-to-phone" class="back-btn">←</button>
         <h1>Введите код</h1>
@@ -149,8 +137,8 @@
     </div>
 </div>
 
-<!-- Капча үчүн жашыруун контейнер -->
-<div id="recaptcha-container" style="display: none;"></div>
+<!-- Капча үчүн контейнер (көрүнбөйт) -->
+<div id="recaptcha-container"></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -173,17 +161,12 @@
     const phoneInput = document.getElementById('phone-input');
     const sendCodeBtn = document.getElementById('send-code-btn');
 
-    // Капчаны туура таап инициализация кылуу
-    try {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response) => {}
-        });
-    } catch (e) {
-        console.error("Капча катасы:", e);
-    }
+    // КАТА ОҢДОЛДУ: Элементтин өзүн туура тапшырдык
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, document.getElementById('recaptcha-container'), {
+        'size': 'invisible',
+        'callback': (response) => {}
+    });
 
-    // Тексттин узундугун текшерүү гана калды
     function checkPhone() {
         const num = phoneInput.value.trim();
         if (num.length >= 10) { 
@@ -194,23 +177,14 @@
     }
 
     phoneInput.addEventListener('input', checkPhone);
-    phoneInput.addEventListener('change', checkPhone);
-    
-    // Баскычты баскандагы логика
+    window.addEventListener('load', checkPhone);
+    checkPhone();
+
     sendCodeBtn.addEventListener('click', () => {
         const phoneNumber = phoneInput.value.trim();
-        
-        if (phoneNumber.length < 10) {
-            alert("Сураныч, номерди толук жазыңыз!");
-            return;
-        }
 
         sendCodeBtn.innerText = "Отправка...";
         sendCodeBtn.disabled = true;
-
-        if (!window.recaptchaVerifier) {
-            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {'size': 'invisible'});
-        }
 
         signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
             .then((result) => {
@@ -219,15 +193,13 @@
                 document.getElementById('code-screen').classList.add('active');
             })
             .catch((err) => {
-                // Ката чыкса дароо экранга билдирүү келет
-                alert("Ката чыкты: " + err.message + "\nШилтемени туура ачканыңызды текшериңиз.");
+                alert("Ката чыкты: " + err.message);
                 sendCodeBtn.innerText = "Продолжить";
                 sendCodeBtn.disabled = false;
                 if(window.grecaptcha) window.grecaptcha.reset();
             });
     });
 
-    // Артка кайтуу баскычы
     document.getElementById('back-to-phone').addEventListener('click', () => {
         document.getElementById('code-screen').classList.remove('active');
         document.getElementById('phone-screen').classList.add('active');
@@ -235,30 +207,18 @@
         sendCodeBtn.disabled = false;
     });
 
-    // СМС кодду киргизүү логикасы
     document.querySelectorAll('.code-input').forEach((input, index, inputs) => {
         input.addEventListener('input', (e) => {
             if(e.target.value.length === 1 && index < 5) inputs[index+1].focus();
             const code = Array.from(inputs).map(i => i.value).join('');
             if(code.length === 6) {
                 window.confirmationResult.confirm(code)
-                    .then(() => {
-                        alert("Ийгиликтүү кирдиңиз!");
-                    })
-                    .catch((error) => {
-                        alert("Код ката же мөөнөтү өтүп кеткен: " + error.message);
-                    });
-            }
-        });
-        
-        input.addEventListener('keydown', (e) => {
-            if(e.key === 'Backspace' && !e.target.value && index > 0) {
-                inputs[index-1].focus();
+                    .then(() => alert("Ийгиликтүү кирдиңиз!"))
+                    .catch((error) => alert("Код ката: " + error.message));
             }
         });
     });
 </script>
 
 </body>
-    </html>
-    
+                </html>
