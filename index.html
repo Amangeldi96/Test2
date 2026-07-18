@@ -5,113 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 24px 20px;
-        }
-        .container {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-        }
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: flex;
-            flex-direction: column;
-        }
-        .back-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            width: 24px;
-            height: 24px;
-            margin-bottom: 16px;
-            padding: 0;
-            font-size: 20px;
-        }
-        h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 8px;
-        }
-        .subtitle {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.4;
-            margin-bottom: 24px;
-        }
-        .input-group {
-            margin-bottom: 16px;
-        }
-        .input-label {
-            font-size: 13px;
-            color: #333;
-            margin-bottom: 6px;
-        }
-        .input-field {
-            width: 100%;
-            height: 50px;
-            border: 1px solid #d9d9d9;
-            border-radius: 12px;
-            padding: 0 14px;
-            font-size: 16px;
-            color: #111;
-            outline: none;
-        }
-        .primary-btn {
-            width: 100%;
-            height: 50px;
-            background-color: #111;
-            border: 1px solid #111;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .primary-btn:disabled {
-            background-color: #f5f5f5;
-            border-color: #e8e8e8;
-            color: #b5b5b5;
-            cursor: not-allowed;
-        }
-        .code-inputs {
-            display: flex;
-            justify-content: space-between;
-            gap: 6px;
-            margin-bottom: 20px;
-        }
-        .code-input {
-            width: 44px;
-            height: 44px;
-            border: 1px solid #d9d9d9;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 600;
-            outline: none;
-        }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #ffffff; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 24px 20px; }
+        .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; }
+        .screen { display: none; }
+        .screen.active { display: flex; flex-direction: column; }
+        .back-btn { background: none; border: none; cursor: pointer; width: 24px; height: 24px; margin-bottom: 16px; padding: 0; font-size: 20px; }
+        h1 { font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px; }
+        .subtitle { font-size: 14px; color: #666; line-height: 1.4; margin-bottom: 24px; }
+        .input-group { margin-bottom: 16px; }
+        .input-label { font-size: 13px; color: #333; margin-bottom: 6px; }
+        .input-field { width: 100%; height: 50px; border: 1px solid #d9d9d9; border-radius: 12px; padding: 0 14px; font-size: 16px; color: #111; outline: none; }
+        .primary-btn { width: 100%; height: 50px; background-color: #111; border: 1px solid #111; border-radius: 12px; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .primary-btn:disabled { background-color: #f5f5f5; border-color: #e8e8e8; color: #b5b5b5; cursor: not-allowed; }
+        .code-inputs { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 20px; }
+        .code-input { width: 44px; height: 44px; border: 1px solid #d9d9d9; border-radius: 8px; text-align: center; font-size: 18px; font-weight: 600; outline: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- 1-ЭКРАН: ТЕЛЕФОН НОМЕР -->
     <div id="phone-screen" class="screen active">
         <h1>Регистрация</h1>
         <p class="subtitle">Укажите номер телефона</p>
@@ -122,7 +35,6 @@
         <button id="send-code-btn" class="primary-btn">Продолжить</button>
     </div>
 
-    <!-- 2-ЭКРАН: КОДДУ КИРГИЗҮҮ -->
     <div id="code-screen" class="screen">
         <button id="back-to-phone" class="back-btn">←</button>
         <h1>Введите код</h1>
@@ -137,7 +49,6 @@
     </div>
 </div>
 
-<!-- Капча үчүн контейнер (көрүнбөйт) -->
 <div id="recaptcha-container"></div>
 
 <script type="module">
@@ -161,28 +72,14 @@
     const phoneInput = document.getElementById('phone-input');
     const sendCodeBtn = document.getElementById('send-code-btn');
 
-    // КАТА ОҢДОЛДУ: Элементтин өзүн туура тапшырдык
+    // Капчаны объект катары туура инициализациялоо
     window.recaptchaVerifier = new RecaptchaVerifier(auth, document.getElementById('recaptcha-container'), {
         'size': 'invisible',
         'callback': (response) => {}
     });
 
-    function checkPhone() {
-        const num = phoneInput.value.trim();
-        if (num.length >= 10) { 
-            sendCodeBtn.disabled = false;
-        } else {
-            sendCodeBtn.disabled = true;
-        }
-    }
-
-    phoneInput.addEventListener('input', checkPhone);
-    window.addEventListener('load', checkPhone);
-    checkPhone();
-
     sendCodeBtn.addEventListener('click', () => {
         const phoneNumber = phoneInput.value.trim();
-
         sendCodeBtn.innerText = "Отправка...";
         sendCodeBtn.disabled = true;
 
@@ -193,7 +90,8 @@
                 document.getElementById('code-screen').classList.add('active');
             })
             .catch((err) => {
-                alert("Ката чыкты: " + err.message);
+                // КАТАНЫ ЭКРАНГА ЧЫГАРУУ (Маселе каякта экенин дароо көрөбүз)
+                alert("КАТА АНЫКТАЛДЫ:\n" + err.code + "\n" + err.message);
                 sendCodeBtn.innerText = "Продолжить";
                 sendCodeBtn.disabled = false;
                 if(window.grecaptcha) window.grecaptcha.reset();
@@ -221,4 +119,4 @@
 </script>
 
 </body>
-                </html>
+</html>
