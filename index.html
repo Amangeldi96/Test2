@@ -200,15 +200,15 @@
 
 </div>
 
-<!-- Бул контейнер дагы Invisible капча үчүн маанилүү -->
+<!-- Жашыруун капча үчүн контейнер -->
 <div id="recaptcha-container"></div>
 
+<!-- КАТАЛАРДЫ АЙЛАНЫП ӨТҮҮЧҮ ТУРУКТУУ V9 ВЕРСИЯСЫ -->
 <script type="module">
-    // Firebase SDK v10 модулдары
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-    // СИЗДИН ЖАҢЫ ТАЗА ДОЛБООРДУН АЧКЫЧТАРЫ
+    import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  
+    // ЖАҢЫ ЖАНА ТАЗА ТҮЗҮЛГӨН ДОЛБООРДУН АЧКЫЧТАРЫ (test2-4b9cc)
     const firebaseConfig = {
         apiKey: "AIzaSyA0XNjDbTnlw-KVtjUqLRmn9V4gncSkYmY",
         authDomain: "test2-4b9cc.firebaseapp.com",
@@ -222,7 +222,7 @@ import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.g
     // Инициализация
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    auth.languageCode = 'ru'; // СМС билдирүүнүн тили
+    auth.languageCode = 'ru'; // СМС тили
 
     let confirmationResult = null;
 
@@ -234,7 +234,7 @@ import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.g
     const backToPhone = document.getElementById('back-to-phone');
     const codeInputs = document.querySelectorAll('.code-input');
 
-    // Номер 12 белгиден ашканда баскычты активдештирүү (+996...)
+    // Номер терилгенде баскычты активдештирүү
     phoneInput.addEventListener('input', () => {
         if (phoneInput.value.trim().length >= 12) {
             sendCodeBtn.removeAttribute('disabled');
@@ -245,15 +245,15 @@ import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.g
         }
     });
 
-    // Invisible reCAPTCHA конфигурациясы
+    // Invisible reCAPTCHA жөндөөсү
     window.recaptchaVerifier = new RecaptchaVerifier(auth, 'send-code-btn', {
         'size': 'invisible',
         'callback': (response) => {
-            // Капча ийгиликтүү өткөндө иштейт
+            // Ийгиликтүү өткөндө
         }
     });
 
-    // СМС жөнөтүү логикасы
+    // СМС жөнөтүү
     sendCodeBtn.addEventListener('click', () => {
         const phoneNumber = phoneInput.value.trim();
         const appVerifier = window.recaptchaVerifier;
@@ -265,7 +265,6 @@ import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.g
             .then((result) => {
                 confirmationResult = result;
                 
-                // Экинчи экранга (код киргизүүгө) өтүү
                 displayPhone.innerText = phoneNumber;
                 phoneScreen.classList.remove('active');
                 codeScreen.classList.add('active');
@@ -283,14 +282,13 @@ import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.g
             });
     });
 
-    // Код киргизүү талааларынын логикасы
+    // СМС коддорду терүү
     codeInputs.forEach((input, index) => {
         input.addEventListener('input', (e) => {
             if (e.target.value.length === 1 && index < codeInputs.length - 1) {
                 codeInputs[index + 1].focus();
             }
             
-            // 6 цифра тең толгондо автоматтык түрдө текшерүүгө жөнөтөт
             const fullCode = Array.from(codeInputs).map(i => i.value).join('');
             if (fullCode.length === 6) {
                 verifyCode(fullCode);
@@ -304,24 +302,23 @@ import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.g
         });
     });
 
-    // СМС кодду тууралыгын текшерүү
+    // Кодду текшерүү
     function verifyCode(code) {
         if (!confirmationResult) return;
 
         confirmationResult.confirm(code)
             .then((result) => {
                 const user = result.user;
-                alert("Успешный вход! UID пользователя: " + user.uid);
-                // Бул жерге кийин ийгиликтүү киргенден кийин өтүүчү баракчанын дарегин косоңуз болот
+                alert("Успешный вход! UID: " + user.uid);
             })
             .catch((error) => {
-                alert("Неверный код или срок действия кода истек!");
+                alert("Неверный код!");
                 codeInputs.forEach(input => input.value = '');
                 codeInputs[0].focus();
             });
     }
 
-    // Артка кайтуу баскычы
+    // Артка кайтуу
     backToPhone.addEventListener('click', () => {
         codeScreen.classList.remove('active');
         phoneScreen.classList.add('active');
@@ -329,7 +326,7 @@ import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.g
         sendCodeBtn.removeAttribute('disabled');
     });
 
-    // Таймердин функциясы
+    // Таймер
     function startTimer() {
         let timeLeft = 58;
         const timerElement = document.getElementById('timer');
