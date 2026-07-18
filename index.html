@@ -5,210 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 40px 24px;
-        }
-        .container {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* Экрандарды алмаштыруу */
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            width: 24px;
-            height: 24px;
-            margin-bottom: 24px;
-            padding: 0;
-        }
-
-        h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 12px;
-        }
-        .subtitle {
-            font-size: 15px;
-            color: #666;
-            line-height: 1.4;
-            margin-bottom: 32px;
-        }
-        
-        /* Инпуттар */
-        .input-group {
-            margin-bottom: 20px;
-        }
-        .input-label {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        .input-label span {
-            color: #ff4d4f;
-        }
-        .input-field {
-            width: 100%;
-            height: 54px;
-            border: 1px solid #d9d9d9;
-            border-radius: 12px;
-            padding: 0 16px;
-            font-size: 17px;
-            color: #111;
-            outline: none;
-        }
-        .input-field:focus {
-            border-color: #222;
-        }
-
-        .agreement {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.4;
-            margin-bottom: 40px;
-        }
-        .agreement a {
-            color: #4cd9c0;
-            text-decoration: none;
-        }
-
-        /* Кнопкалар */
-        .primary-btn {
-            width: 100%;
-            height: 54px;
-            background-color: #f5f5f5;
-            border: 1px solid #e8e8e8;
-            border-radius: 12px;
-            color: #b5b5b5;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .primary-btn.enabled {
-            background-color: #111;
-            border-color: #111;
-            color: #fff;
-        }
-
-        .footer-text {
-            text-align: center;
-            margin-top: 60px;
-            font-size: 15px;
-            color: #111;
-        }
-        .footer-text a {
-            color: #4cd9c0;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        /* СМС коддун инпуттары */
-        .code-inputs {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-        .code-input {
-            width: 48px;
-            height: 48px;
-            border: 1px solid #d9d9d9;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 600;
-            outline: none;
-        }
-        .code-input:focus {
-            border-color: #222;
-        }
-        .timer-text {
-            text-align: center;
-            font-size: 14px;
-            color: #333;
-        }
+        * { box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0; }
+        body { background-color: #ffffff; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 40px 24px; }
+        .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; }
+        .screen { display: none; }
+        .screen.active { display: flex; flex-direction: column; }
+        .back-btn { background: none; border: none; cursor: pointer; width: 24px; height: 24px; margin-bottom: 24px; padding: 0; }
+        h1 { font-size: 32px; font-weight: 700; color: #111; margin-bottom: 12px; }
+        .subtitle { font-size: 15px; color: #666; margin-bottom: 32px; }
+        .input-group { margin-bottom: 20px; }
+        .input-label { font-size: 14px; color: #333; margin-bottom: 8px; }
+        .input-field { width: 100%; height: 54px; border: 1px solid #d9d9d9; border-radius: 12px; padding: 0 16px; font-size: 17px; outline: none; }
+        .primary-btn { width: 100%; height: 54px; background-color: #f5f5f5; border: 1px solid #e8e8e8; border-radius: 12px; color: #b5b5b5; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .primary-btn.enabled { background-color: #111; color: #fff; }
+        .code-inputs { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 24px; }
+        .code-input { width: 48px; height: 48px; border: 1px solid #d9d9d9; border-radius: 8px; text-align: center; font-size: 18px; outline: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-
-    <!-- 1-ЭКРАН: ТЕЛЕФОН НОМЕР -->
     <div id="phone-screen" class="screen active">
         <h1>Регистрация</h1>
-        <p class="subtitle">Укажите номер телефона, чтобы получить код подтверждения</p>
-        
+        <p class="subtitle">Укажите номер телефона</p>
         <div class="input-group">
-            <div class="input-label"><span>*</span> Номер телефона</div>
+            <div class="input-label">Номер телефона</div>
             <input type="tel" id="phone-input" class="input-field" placeholder="+996" value="+996">
         </div>
-
-        <p class="agreement">
-            Нажимая кнопку, вы подтверждаете согласие с <a href="#">Условиями и Политикой конфиденциальности</a>
-        </p>
-
-        <!-- Кадимки баскыч, капча төмөндөгү өзүнчө контейнерге байланат -->
         <button id="send-code-btn" class="primary-btn" disabled>Продолжить</button>
-
-        <p class="footer-text">Есть аккаунт? <a href="#">Войти</a></p>
     </div>
 
-    <!-- 2-ЭКРАН: КОДДУ КИРГИЗҮҮ -->
     <div id="code-screen" class="screen">
-        <button id="back-to-phone" class="back-btn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4cd9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        
+        <button id="back-to-phone" class="back-btn">←</button>
         <h1>Введите код</h1>
-        <p class="subtitle">Мы отправили код подтверждения на номер <span id="display-phone" style="font-weight: 600;"></span></p>
-
         <div class="code-inputs">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
+            <input type="text" maxlength="1" class="code-input">
+            <input type="text" maxlength="1" class="code-input">
+            <input type="text" maxlength="1" class="code-input">
+            <input type="text" maxlength="1" class="code-input">
+            <input type="text" maxlength="1" class="code-input">
+            <input type="text" maxlength="1" class="code-input">
         </div>
-
-        <p class="timer-text">Отправить код повторно через: <span id="timer">0:58</span></p>
     </div>
-
 </div>
 
-<!-- Жеринде иштеши үчүн көрүнбөгөн капча контейнери -->
+<!-- Капча контейнери -->
 <div id="recaptcha-container"></div>
 
-<!-- КАТАЛАРДЫ АЙЛАНЫП ӨТҮҮЧҮ ТУРУКТУУ V9 ВЕРСИЯСЫ -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
   
-    // ЖАҢЫ ДОЛБООРДУН АЧКЫЧТАРЫ (test2-4b9cc)
     const firebaseConfig = {
         apiKey: "AIzaSyA0XNjDbTnlw-KVtjUqLRmn9V4gncSkYmY",
         authDomain: "test2-4b9cc.firebaseapp.com",
@@ -219,145 +66,52 @@
         measurementId: "G-K6M4H74LFN"
     };
 
-    // Инициализация
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    auth.languageCode = 'ru'; // СМС тили
+    const auth = getAuth(initializeApp(firebaseConfig));
+    auth.languageCode = 'ru';
 
-    let confirmationResult = null;
+    // ОҢДОЛГОН ЖЕР: document.getElementById колдонулду
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, document.getElementById('recaptcha-container'), {
+        'size': 'invisible'
+    });
 
     const phoneInput = document.getElementById('phone-input');
     const sendCodeBtn = document.getElementById('send-code-btn');
-    const phoneScreen = document.getElementById('phone-screen');
-    const codeScreen = document.getElementById('code-screen');
-    const displayPhone = document.getElementById('display-phone');
-    const backToPhone = document.getElementById('back-to-phone');
-    const codeInputs = document.querySelectorAll('.code-input');
 
-    // Номер терилгенде баскычты активдештирүү
     phoneInput.addEventListener('input', () => {
         if (phoneInput.value.trim().length >= 12) {
-            sendCodeBtn.removeAttribute('disabled');
+            sendCodeBtn.disabled = false;
             sendCodeBtn.classList.add('enabled');
-        } else {
-            sendCodeBtn.setAttribute('disabled', 'true');
-            sendCodeBtn.classList.remove('enabled');
         }
     });
 
-    // Invisible reCAPTCHA жөндөөсү (Баскычты катырбай иштетиш үчүн контейнерге байланды)
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': (response) => {
-            // Ийгиликтүү өткөндө
-        },
-        'expired-callback': () => {
-            if (window.grecaptcha) {
-                window.grecaptcha.reset();
-            }
-        }
-    });
-
-    // СМС жөнөтүү логикасы
     sendCodeBtn.addEventListener('click', () => {
-        const phoneNumber = phoneInput.value.trim();
-        const appVerifier = window.recaptchaVerifier;
-
         sendCodeBtn.innerText = "Отправка...";
-        sendCodeBtn.setAttribute('disabled', 'true');
-        sendCodeBtn.classList.remove('enabled');
-
-        signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+        signInWithPhoneNumber(auth, phoneInput.value.trim(), window.recaptchaVerifier)
             .then((result) => {
-                confirmationResult = result;
-                
-                displayPhone.innerText = phoneNumber;
-                phoneScreen.classList.remove('active');
-                codeScreen.classList.add('active');
-                
-                startTimer();
-                codeInputs[0].focus();
+                window.confirmationResult = result;
+                document.getElementById('phone-screen').classList.remove('active');
+                document.getElementById('code-screen').classList.add('active');
             })
-            .catch((error) => {
-                alert("Ошибка при отправке СМС: " + error.message);
-                
-                // Ката чыкканда баскычты кайра жандыруу
+            .catch((err) => {
+                alert("Ошибка: " + err.message);
                 sendCodeBtn.innerText = "Продолжить";
-                sendCodeBtn.removeAttribute('disabled');
-                sendCodeBtn.classList.add('enabled');
-                
-                // Капчаны тазалап жаңыдан баштоо
-                if (window.grecaptcha) {
-                    window.grecaptcha.reset();
-                }
+                if(window.grecaptcha) window.grecaptcha.reset();
             });
     });
 
-    // СМС коддорду бирден терүү логикасы
-    codeInputs.forEach((input, index) => {
+    // Кодду текшерүү
+    document.querySelectorAll('.code-input').forEach((input, index, inputs) => {
         input.addEventListener('input', (e) => {
-            if (e.target.value.length === 1 && index < codeInputs.length - 1) {
-                codeInputs[index + 1].focus();
-            }
-            
-            const fullCode = Array.from(codeInputs).map(i => i.value).join('');
-            if (fullCode.length === 6) {
-                verifyCode(fullCode);
-            }
-        });
-
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                codeInputs[index - 1].focus();
+            if(e.target.value.length === 1 && index < 5) inputs[index+1].focus();
+            const code = Array.from(inputs).map(i => i.value).join('');
+            if(code.length === 6) {
+                window.confirmationResult.confirm(code)
+                    .then(() => alert("Успешно!"))
+                    .catch(() => alert("Неверный код"));
             }
         });
     });
-
-    // Киргизилген СМС кодду Firebase аркылуу ырастоо
-    function verifyCode(code) {
-        if (!confirmationResult) return;
-
-        confirmationResult.confirm(code)
-            .then((result) => {
-                const user = result.user;
-                alert("Успешный вход! UID: " + user.uid);
-            })
-            .catch((error) => {
-                alert("Неверный код!");
-                codeInputs.forEach(input => input.value = '');
-                codeInputs[0].focus();
-            });
-    }
-
-    // Артка кайтуу баскычы
-    backToPhone.addEventListener('click', () => {
-        codeScreen.classList.remove('active');
-        phoneScreen.classList.add('active');
-        sendCodeBtn.innerText = "Продолжить";
-        sendCodeBtn.removeAttribute('disabled');
-        sendCodeBtn.classList.add('enabled');
-    });
-
-    // Таймердин иштеши
-    function startTimer() {
-        let timeLeft = 58;
-        const timerElement = document.getElementById('timer');
-        const interval = setInterval(() => {
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                timerElement.innerText = "Отправить повторно";
-                timerElement.style.color = "#4cd9c0";
-                timerElement.style.cursor = "pointer";
-            } else {
-                let seconds = timeLeft % 60;
-                seconds = seconds < 10 ? '0' + seconds : seconds;
-                timerElement.innerText = `0:${seconds}`;
-                timeLeft--;
-            }
-        }, 1000);
-    }
 </script>
 
 </body>
-    </html>
-    
+</html>
