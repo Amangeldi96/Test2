@@ -171,7 +171,7 @@
             Нажимая кнопку, вы подтверждаете согласие с <a href="#">Условиями и Политикой конфиденциальности</a>
         </p>
 
-        <!-- Invisible reCAPTCHA ушул баскычка байланат -->
+        <!-- Кадимки баскыч, капча төмөндөгү өзүнчө контейнерге байланат -->
         <button id="send-code-btn" class="primary-btn" disabled>Продолжить</button>
 
         <p class="footer-text">Есть аккаунт? <a href="#">Войти</a></p>
@@ -200,7 +200,7 @@
 
 </div>
 
-<!-- Жашыруун капча үчүн контейнер -->
+<!-- Жеринде иштеши үчүн көрүнбөгөн капча контейнери -->
 <div id="recaptcha-container"></div>
 
 <!-- КАТАЛАРДЫ АЙЛАНЫП ӨТҮҮЧҮ ТУРУКТУУ V9 ВЕРСИЯСЫ -->
@@ -208,7 +208,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
   
-    // ЖАҢЫ ЖАНА ТАЗА ТҮЗҮЛГӨН ДОЛБООРДУН АЧКЫЧТАРЫ (test2-4b9cc)
+    // ЖАҢЫ ДОЛБООРДУН АЧКЫЧТАРЫ (test2-4b9cc)
     const firebaseConfig = {
         apiKey: "AIzaSyA0XNjDbTnlw-KVtjUqLRmn9V4gncSkYmY",
         authDomain: "test2-4b9cc.firebaseapp.com",
@@ -245,21 +245,27 @@
         }
     });
 
-    // Invisible reCAPTCHA жөндөөсү
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'send-code-btn', {
+    // Invisible reCAPTCHA жөндөөсү (Баскычты катырбай иштетиш үчүн контейнерге байланды)
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
         'size': 'invisible',
         'callback': (response) => {
             // Ийгиликтүү өткөндө
+        },
+        'expired-callback': () => {
+            if (window.grecaptcha) {
+                window.grecaptcha.reset();
+            }
         }
     });
 
-    // СМС жөнөтүү
+    // СМС жөнөтүү логикасы
     sendCodeBtn.addEventListener('click', () => {
         const phoneNumber = phoneInput.value.trim();
         const appVerifier = window.recaptchaVerifier;
 
         sendCodeBtn.innerText = "Отправка...";
         sendCodeBtn.setAttribute('disabled', 'true');
+        sendCodeBtn.classList.remove('enabled');
 
         signInWithPhoneNumber(auth, phoneNumber, appVerifier)
             .then((result) => {
@@ -274,15 +280,20 @@
             })
             .catch((error) => {
                 alert("Ошибка при отправке СМС: " + error.message);
+                
+                // Ката чыкканда баскычты кайра жандыруу
                 sendCodeBtn.innerText = "Продолжить";
                 sendCodeBtn.removeAttribute('disabled');
+                sendCodeBtn.classList.add('enabled');
+                
+                // Капчаны тазалап жаңыдан баштоо
                 if (window.grecaptcha) {
                     window.grecaptcha.reset();
                 }
             });
     });
 
-    // СМС коддорду терүү
+    // СМС коддорду бирден терүү логикасы
     codeInputs.forEach((input, index) => {
         input.addEventListener('input', (e) => {
             if (e.target.value.length === 1 && index < codeInputs.length - 1) {
@@ -302,7 +313,7 @@
         });
     });
 
-    // Кодду текшерүү
+    // Киргизилген СМС кодду Firebase аркылуу ырастоо
     function verifyCode(code) {
         if (!confirmationResult) return;
 
@@ -318,15 +329,16 @@
             });
     }
 
-    // Артка кайтуу
+    // Артка кайтуу баскычы
     backToPhone.addEventListener('click', () => {
         codeScreen.classList.remove('active');
         phoneScreen.classList.add('active');
         sendCodeBtn.innerText = "Продолжить";
         sendCodeBtn.removeAttribute('disabled');
+        sendCodeBtn.classList.add('enabled');
     });
 
-    // Таймер
+    // Таймердин иштеши
     function startTimer() {
         let timeLeft = 58;
         const timerElement = document.getElementById('timer');
@@ -347,4 +359,5 @@
 </script>
 
 </body>
-</html>
+    </html>
+    
