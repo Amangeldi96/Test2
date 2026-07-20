@@ -1,134 +1,317 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ky">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация</title>
+    <title>Car Details - 3D View</title>
+    
+    <!-- 3D моделди көрсөтүүчү Google Model Viewer китепканасы -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
     <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
-        body { background-color: #ffffff; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 24px 20px; }
-        .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; }
-        .screen { display: none; }
-        .screen.active { display: flex; flex-direction: column; }
-        .back-btn { background: none; border: none; cursor: pointer; width: 24px; height: 24px; margin-bottom: 16px; padding: 0; font-size: 20px; }
-        h1 { font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px; }
-        .subtitle { font-size: 14px; color: #666; line-height: 1.4; margin-bottom: 24px; }
-        .input-group { margin-bottom: 16px; }
-        .input-label { font-size: 13px; color: #333; margin-bottom: 6px; }
-        .input-field { width: 100%; height: 50px; border: 1px solid #d9d9d9; border-radius: 12px; padding: 0 14px; font-size: 16px; color: #111; outline: none; margin-bottom: 16px; }
-        .primary-btn { width: 100%; height: 50px; background-color: #111; border: 1px solid #111; border-radius: 12px; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .primary-btn:disabled { background-color: #f5f5f5; border-color: #e8e8e8; color: #b5b5b5; cursor: not-allowed; }
-        .code-inputs { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 20px; }
-        .code-input { width: 44px; height: 44px; border: 1px solid #d9d9d9; border-radius: 8px; text-align: center; font-size: 18px; font-weight: 600; outline: none; }
-        /* Капча үчүн атайын стил */
-        #recaptcha-container { margin-bottom: 16px; display: flex; justify-content: center; }
+        /* Баштапкы стилдерди тазалоо */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Мобилдик телефондун экранынын өлчөмү (Контейнер) */
+        .phone-container {
+            width: 100%;
+            max-width: 412px; /* Стандарттуу телефондун туурасы */
+            height: 100vh;
+            background-color: #f8f9fa;
+            position: relative;
+            overflow-y: auto;
+            padding-bottom: 100px; /* Төмөнкү баскыч үчүн орун */
+        }
+
+        /* Үстүңкү навигация (Header) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Машинанын аты жана жылы */
+        .car-title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 10px 20px;
+        }
+
+        .car-title-section h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .car-title-section span {
+            font-size: 16px;
+            color: #7d7d7d;
+            font-weight: 500;
+        }
+
+        /* 3D Модель жайгашкан контейнер */
+        .canvas-container {
+            width: 100%;
+            height: 280px;
+            position: relative;
+            background-color: transparent;
+        }
+
+        /* Google Model Viewer стили */
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            --poster-color: transparent;
+        }
+
+        /* Сүрөттөгүдөй нары-бери жылдыруу индикатору */
+        .slider-indicator {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            pointer-events: none; /* Машинаны айлантууга тоскоол болбошу үчүн */
+        }
+
+        /* Бөлүмдөрдүн аттары */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            padding: 20px 20px 10px 20px;
+            color: #1a1a1a;
+        }
+
+        /* Техникалык мүнөздөмөлөр (Car Specs) */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 0 20px;
+        }
+
+        .spec-card {
+            background-color: white;
+            padding: 15px 10px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .spec-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .spec-label {
+            font-size: 11px;
+            color: #8d8d8d;
+            margin-bottom: 2px;
+        }
+
+        .spec-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        /* Карта үчүн орун (Location) */
+        .map-placeholder {
+            height: 120px;
+            background-color: #e9ecef;
+            margin: 0 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed #ccc;
+            color: #7c7c7c;
+            font-size: 14px;
+        }
+
+        /* Төмөнкү баскычтар панели (Footer) */
+        .footer-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 372px;
+            height: 65px;
+            background-color: #1a1a1a;
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 100;
+        }
+
+        .book-btn {
+            background-color: #7dd3fc;
+            height: 48px;
+            padding: 0 25px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .book-btn span {
+            color: #000;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .book-btn .arrows {
+            color: #0284c7;
+            margin-left: 8px;
+            letter-spacing: -2px;
+        }
+
+        .price-container {
+            padding-right: 20px;
+        }
+
+        .price-text {
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- 1-ЭКРАН: ТЕЛЕФОН НОМЕР -->
-    <div id="phone-screen" class="screen active">
-        <h1>Регистрация</h1>
-        <p class="subtitle">Укажите номер телефона</p>
-        <div class="input-group">
-            <div class="input-label">Номер телефона</div>
-            <input type="tel" id="phone-input" class="input-field" placeholder="+996" value="+996220604604">
+    <div class="phone-container">
+        
+        <!-- Үстүңкү навигация -->
+        <div class="header">
+            <div class="icon-btn">‹</div>
+            <h3>Car Details</h3>
+            <div class="icon-btn" style="font-size: 15px;">♥</div>
         </div>
-        
-        <!-- Капча ушул жерде колдонуучуга көрүнүп турат -->
-        <div id="recaptcha-container"></div>
-        
-        <button id="send-code-btn" class="primary-btn">Продолжить</button>
+
+        <!-- Машинанын маалыматы -->
+        <div class="car-title-section">
+            <h1>Porsche Taycan</h1>
+            <span>2022</span>
+        </div>
+
+        <!-- 3D 360° Модель бөлүмү -->
+        <div class="canvas-container">
+            <!-- Сиздин .glb файлыңыз ушул жерге коюлат -->
+            <!-- Мисал катары Google'дун акысыз даяр модели коюлду -->
+            <model-viewer 
+                id="carViewer"
+                src="porshe.glb" 
+                alt="3D Car"
+                camera-controls
+                touch-action="pan-y"
+                disable-zoom
+                auto-rotate
+                interaction-prompt="none"
+                shadow-intensity="1"
+                environment-image="neutral">
+            </model-viewer>
+            
+            <!-- Ортодогу индикатор -->
+            <div class="slider-indicator"> ‹ &nbsp; › </div>
+        </div>
+
+        <!-- Спецификациялар -->
+        <div class="section-title">Car specs</div>
+        <div class="specs-grid">
+            <div class="spec-card">
+                <div class="spec-icon">⛽</div>
+                <div class="spec-label">Fuel Info</div>
+                <div class="spec-value">10.9L</div>
+            </div>
+            <div class="spec-card">
+                <div class="spec-icon">⚡</div>
+                <div class="spec-label">Top speed</div>
+                <div class="spec-value">120mph</div>
+            </div>
+            <div class="spec-card">
+                <div class="spec-icon">👤</div>
+                <div class="spec-label">Capacity</div>
+                <div class="spec-value">2 seats</div>
+            </div>
+        </div>
+
+        <!-- Карта жайгашкан жер -->
+        <div class="section-title">Location</div>
+        <div class="map-placeholder">
+            📍 Карта ушул жерге жайгашат
+        </div>
+
+        <!-- Төмөнкү баскыч (Footer) -->
+        <div class="footer-panel">
+            <button class="book-btn" onclick="bookNow()">
+                <span>Book now</span>
+                <span class="arrows">>>>></span>
+            </button>
+            <div class="price-container">
+                <div class="price-text">$120/day</div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- 2-ЭКРАН: КОДДУ КИРГИЗҮҮ -->
-    <div id="code-screen" class="screen">
-        <button id="back-to-phone" class="back-btn">←</button>
-        <h1>Введите код</h1>
-        <div class="code-inputs">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-            <input type="text" maxlength="1" class="code-input" pattern="[0-9]*" inputmode="numeric">
-        </div>
-    </div>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  
-    const firebaseConfig = {
-        apiKey: "AIzaSyA0XNjDbTnlw-KVtjUqLRmn9V4gncSkYmY",
-        authDomain: "test2-4b9cc.firebaseapp.com",
-        projectId: "test2-4b9cc",
-        storageBucket: "test2-4b9cc.firebasestorage.app",
-        messagingSenderId: "854440471746",
-        appId: "1:854440471746:web:038015aca56f69bf10df5b"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    auth.languageCode = 'ru';
-
-    const phoneInput = document.getElementById('phone-input');
-    const sendCodeBtn = document.getElementById('send-code-btn');
-
-    // КАТА ОҢДОЛДУ: Капча "normal" (көрүнүктүү) кылынды, бул илинип калууну алдын алат
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, document.getElementById('recaptcha-container'), {
-        'size': 'normal',
-        'callback': (response) => {
-            // Капчадан ийгиликтүү өткөндө баскычты активдүү кылууга болот
+    <!-- JavaScript логикасы (керек болсо баскычтарды башкаруу үчүн) -->
+    <script>
+        function bookNow() {
+            alert("Машина ийгиликтүү заказ кылынды!");
         }
-    });
 
-    // Капчаны экранга чыгаруу
-    window.recaptchaVerifier.render();
-
-    sendCodeBtn.addEventListener('click', () => {
-        const phoneNumber = phoneInput.value.trim();
-
-        sendCodeBtn.innerText = "Отправка...";
-        sendCodeBtn.disabled = true;
-
-        signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
-            .then((result) => {
-                window.confirmationResult = result;
-                document.getElementById('phone-screen').classList.remove('active');
-                document.getElementById('code-screen').classList.add('active');
-            })
-            .catch((err) => {
-                alert("Ката чыкты: " + err.message);
-                sendCodeBtn.innerText = "Продолжить";
-                sendCodeBtn.disabled = false;
-                if(window.grecaptcha) window.grecaptcha.reset();
-            });
-    });
-
-    document.getElementById('back-to-phone').addEventListener('click', () => {
-        document.getElementById('code-screen').classList.remove('active');
-        document.getElementById('phone-screen').classList.add('active');
-        sendCodeBtn.innerText = "Продолжить";
-        sendCodeBtn.disabled = false;
-        if(window.grecaptcha) window.grecaptcha.reset();
-    });
-
-    document.querySelectorAll('.code-input').forEach((input, index, inputs) => {
-        input.addEventListener('input', (e) => {
-            if(e.target.value.length === 1 && index < 5) inputs[index+1].focus();
-            const code = Array.from(inputs).map(i => i.value).join('');
-            if(code.length === 6) {
-                window.confirmationResult.confirm(code)
-                    .then(() => alert("Ийгиликтүү кирдиңиз!"))
-                    .catch((error) => alert("Код ката: " + error.message));
-            }
+        // Кааласаңыз, ушул жерден JS аркылуу 3D моделди кошумча башкарсаңыз болот
+        const viewer = document.getElementById('carViewer');
+        
+        // Мисалы: Модель толук жүктөлүп бүткөндө иштей турган функция
+        viewer.addEventListener('load', () => {
+            console.log("3D модель ийгиликтүү жүктөлдү!");
         });
-    });
-</script>
-
+    </script>
 </body>
-                </html>
-                
+</html>
