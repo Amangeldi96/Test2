@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Details - Material Color Change</title>
+    <title>Car Details - 3D View</title>
     
+    <!-- 3D моделди көрсөтүүчү Google Model Viewer китепканасы -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 
     <style>
@@ -33,6 +34,7 @@
             padding-bottom: 100px;
         }
 
+        /* Үстүңкү навигация */
         .header {
             display: flex;
             justify-content: space-between;
@@ -63,6 +65,7 @@
             font-weight: 600;
         }
 
+        /* Машинанын аты жана жылы */
         .car-title-section {
             display: flex;
             justify-content: space-between;
@@ -82,9 +85,10 @@
             font-weight: 500;
         }
 
+        /* 3D Модель контейнери */
         .canvas-container {
             width: 100%;
-            height: 270px;
+            height: 290px;
             position: relative;
             background-color: transparent;
         }
@@ -95,17 +99,19 @@
             --poster-color: transparent;
         }
 
+        /* 3️⃣ Сиз сураган жарым тегерек сызык жана индикатор дизайн */
         .curve-indicator-wrapper {
             position: absolute;
-            bottom: 5px;
+            bottom: 10px;
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            pointer-events: none;
+            pointer-events: none; /* Машинаны айлантууга тоскоол болбойт */
         }
 
+        /* Жарым тегерек сызык сырткы контуру */
         .curve-line {
             position: absolute;
             width: 220px;
@@ -116,6 +122,7 @@
             top: -12px;
         }
 
+        /* Так ортосундагы нары-бери жылдыруучу кнопка */
         .slider-pill {
             background-color: white;
             padding: 4px 14px;
@@ -127,87 +134,62 @@
             z-index: 2;
         }
 
+        /* Бөлүмдөрдүн аттары */
         .section-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
-            padding: 15px 20px 8px 20px;
+            padding: 20px 20px 10px 20px;
             color: #1a1a1a;
         }
 
-        .colors-container {
-            padding: 0 20px;
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .colors-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .color-card {
-            background: white;
-            padding: 10px 15px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.2s;
-        }
-
-        .color-card:hover {
-            border-color: #7dd3fc;
-        }
-
-        .color-circle {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .color-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #333;
-        }
-
+        /* Техникалык мүнөздөмөлөр */
         .specs-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             padding: 0 20px;
-            margin-top: 15px;
         }
 
         .spec-card {
             background-color: white;
-            padding: 12px 10px;
+            padding: 15px 10px;
             border-radius: 16px;
             text-align: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
         .spec-icon {
-            font-size: 20px;
-            margin-bottom: 4px;
+            font-size: 22px;
+            margin-bottom: 5px;
         }
 
         .spec-label {
-            font-size: 10px;
+            font-size: 11px;
             color: #8d8d8d;
             margin-bottom: 2px;
         }
 
         .spec-value {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             color: #000;
         }
 
+        /* Карта үчүн орун */
+        .map-placeholder {
+            height: 120px;
+            background-color: #e9ecef;
+            margin: 0 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed #ccc;
+            color: #7c7c7c;
+            font-size: 14px;
+        }
+
+        /* Төмөнкү баскычтар панели (Footer) */
         .footer-panel {
             position: fixed;
             bottom: 20px;
@@ -264,26 +246,30 @@
 
     <div class="phone-container">
         
+        <!-- Үстүңкү навигация (SVG иконкалары менен) -->
         <div class="header">
             <div class="icon-btn">
+                <!-- SVG Артка кайтуу иконкасы -->
                 <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </div>
             <h3>Car Details</h3>
             <div class="icon-btn">
+                <!-- SVG Жүрөкчө иконкасы -->
                 <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             </div>
         </div>
 
+        <!-- Машинанын маалыматы -->
         <div class="car-title-section">
             <h1>Porsche Taycan</h1>
             <span>2022</span>
         </div>
 
-        <!-- 3D Модель бөлүмү -->
+        <!-- 3D 360° Модель бөлүмү -->
         <div class="canvas-container">
             <model-viewer 
                 id="carViewer"
-                src="porshe.glb" 
+                src="porshe2.glb" 
                 alt="3D Car"
                 camera-controls
                 touch-action="pan-y"
@@ -296,33 +282,14 @@
                 field-of-view="30deg">
             </model-viewer>
             
+            <!-- Жарты тегерек сызык жана нары-бери жылдыруучу индикатор -->
             <div class="curve-indicator-wrapper">
                 <div class="curve-line"></div>
                 <div class="slider-pill">‹ &nbsp; ›</div>
             </div>
         </div>
 
-        <!-- ТҮСТӨРДҮ ТАНДОО -->
-        <div class="section-title">Colors</div>
-        <div class="colors-container">
-            <div class="color-card" onclick="setCarColor(0.8, 0.1, 0.1)">
-                <div class="color-circle" style="background-color: #cc1111;"></div>
-                <span class="color-name">Red</span>
-            </div>
-            <div class="color-card" onclick="setCarColor(0.1, 0.1, 0.8)">
-                <div class="color-circle" style="background-color: #1111cc;"></div>
-                <span class="color-name">Blue</span>
-            </div>
-            <div class="color-card" onclick="setCarColor(0.1, 0.1, 0.1)">
-                <div class="color-circle" style="background-color: #222222;"></div>
-                <span class="color-name">Black</span>
-            </div>
-            <div class="color-card" onclick="setCarColor(0.9, 0.9, 0.9)">
-                <div class="color-circle" style="background-color: #e5e5e5;"></div>
-                <span class="color-name">Silver</span>
-            </div>
-        </div>
-
+        <!-- Спецификациялар -->
         <div class="section-title">Car specs</div>
         <div class="specs-grid">
             <div class="spec-card">
@@ -342,8 +309,15 @@
             </div>
         </div>
 
+        <!-- Карта жайгашкан жер -->
+        <div class="section-title">Location</div>
+        <div class="map-placeholder">
+            📍 Карта ушул жерге жайгашат
+        </div>
+
+        <!-- Төмөнкү баскыч (Footer) -->
         <div class="footer-panel">
-            <button class="book-btn" onclick="alert('Заказ кабыл алынды!')">
+            <button class="book-btn" onclick="bookNow()">
                 <span>Book now</span>
                 <span class="arrows">>>>></span>
             </button>
@@ -355,24 +329,13 @@
     </div>
 
     <script>
-        const viewer = document.getElementById('carViewer');
-
-        function setCarColor(r, g, b) {
-            if (!viewer.loaded) return;
-            
-            // Модельдин бардык материалдарын карап чыгып, сыртын (корпусун) өзгөртөбүз
-            const material = viewer.model.materials[0]; 
-            if (material) {
-                material.pbrMetallicRoughness.setBaseColorFactor([r, g, b, 1.0]);
-            }
+        function bookNow() {
+            alert("Машина ийгиликтүү заказ кылынды!");
         }
 
-        // Модель жүктөлүп бүткөндө материалдардын аттарын консольго чыгарабыз (текшерүү үчүн)
+        const viewer = document.getElementById('carViewer');
         viewer.addEventListener('load', () => {
-            console.log("Жүктөлгөн материалдардын саны:", viewer.model.materials.length);
-            viewer.model.materials.forEach((mat, index) => {
-                console.log(`Материал [${index}]:`, mat.name);
-            });
+            console.log("3D модель ийгиликтүү жүктөлдү!");
         });
     </script>
 </body>
