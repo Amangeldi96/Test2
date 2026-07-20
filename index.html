@@ -241,9 +241,7 @@
 
         <!-- 3D 360° Модель бөлүмү -->
         <div class="canvas-container">
-            <!-- Сиздин .glb файлыңыз ушул жерге коюлат -->
-            <!-- Мисал катары Google'дун акысыз даяр модели коюлду -->
-            <model-viewer 
+                        <model-viewer 
                 id="carViewer"
                 src="porshe.glb" 
                 alt="3D Car"
@@ -253,7 +251,9 @@
                 auto-rotate
                 interaction-prompt="none"
                 shadow-intensity="1"
-                environment-image="neutral">
+                environment-image="neutral"
+                camera-orbit="0deg 75deg 2.5m" 
+                field-of-view="25deg">
             </model-viewer>
             
             <!-- Ортодогу индикатор -->
